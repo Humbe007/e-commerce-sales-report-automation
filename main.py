@@ -8,6 +8,7 @@ import processes.export as ex
 #Part 1: Data Collection from Datasets 
 
 dfs_weeks, df_products = ch.dataframes_from("Datasets","csv")
+print("The data has been loaded successfully.")
 
 #Part 2: Data Cleaning: Standardization of dates and column names
 
@@ -21,8 +22,12 @@ dfs_weeks = [cl.standardize(df, mapping) for df in dfs_weeks]
 df_merged = pd.concat(dfs_weeks, ignore_index=True)
 
 df_merged = cl.remove_duplicate_rows_and_columns(df_merged)
+print("The data has been cleaned successfully.")
+
+
 df_merged = cl.standardize_dates(df_merged) # This function standarize the dates to this format: dd-mm-yyyy and convert the date column to datetime format. 
 # Also, df_merged is the sheet4 of the resultant excel file.
+print("The dates and columns have been standardized successfully.")
 
 #Part 3: Sheet 2: Top products by profit
 df_grouped = df_merged.groupby('product')['quantity'].sum().reset_index()
@@ -42,8 +47,10 @@ df_sheet1.columns = ['metric', 'quantity']
 #Part 5: Sheet 3: Sales trend
 
 df_sheet3 = sales.sheet3(df_merged,df_products)
+print("The sales metrics have been calculated successfully.")
 
 #Part 6: Exporting to Excel:
+
 
 os.makedirs('output', exist_ok=True)
 with pd.ExcelWriter('output//sales_report.xlsx',engine='openpyxl') as writer:
@@ -60,3 +67,5 @@ with pd.ExcelWriter('output//sales_report.xlsx',engine='openpyxl') as writer:
     
         # Freeze panes (congelar fila superior)
         worksheet.freeze_panes = "A2"
+
+input("The sales report has been exported successfully. \nPress Enter to finish.")

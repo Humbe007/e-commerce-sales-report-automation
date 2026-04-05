@@ -29,31 +29,19 @@ def standardize_dates(df):
     Takes a DataFrame and standardizes the date format to "dd/mm/yyyy". 
     It also handles errors by coercing invalid dates to NaT (Not a Time).
     """
-    
     df = df.copy()
-
+    
     def parse_date(x):
         s = str(x).strip()
 
         s = s.replace("/", "-")
-        
-        if "-"  in s[2] and "-" in s[5]: # if the format is "dd-mm-yyyy" or "mm-dd-yyyy"
-            
-            if len(s) == 10 and s[0:2] > "12" and s[0:2] < "32" and s[3:5] > "12": # if the format is "dd-mm-yyyy", d>=12 and d<32
-                print(s,1)
-                return pd.to_datetime(s, format="%d-%m-%Y")
-            
-            if len(s) == 10 and s[3:5] > "12" and s[3:5] < "32" and s[0:2] < "12": # if the format is "mm-dd-yyyy, d>=12 and d<32
-                return pd.to_datetime(s, format="%m-%d-%Y")
-            
-            if len(s) == 10 and s[2] == "-": # If the format is "dd-mm-yyyy"
-                return pd.to_datetime(s, format="%d-%m-%Y")
-        else:
-             
-            if len(s) == 10 and s[4] == "-": # If the format is "yyyy-mm-dd"
-                return pd.to_datetime(s, format="%Y-%m-%d")
 
-        return pd.NaT 
+        if len(s) == 10 and s[2] == "-": # If the format is "dd-mm-yyyy"
+            return pd.to_datetime(s, dayfirst= True, format="%d-%m-%Y")
+        elif len(s) == 10 and s[4] == "-": # If the format is "yyyy-mm-dd"
+                return pd.to_datetime(s, format="%Y-%m-%d")
+        else:
+            return pd.NaT 
 
     df["date"] = df["date"].apply(parse_date)
     df["date"] = df["date"].dt.strftime("%d/%m/%Y")
