@@ -65,4 +65,9 @@ This tool is designed for:
 * Small and medium-sized online stores
 * Freelancers or analysts working with sales data
 
+Here a visualization of the project:
+
+https://github.com/user-attachments/assets/a60f999e-811e-4947-a857-458e664a420a
+
+
  
