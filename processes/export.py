@@ -17,5 +17,5 @@ Receives a worksheet and adjusts the width of each column based on the widest da
             if current_width > max_width:
                 max_width = current_width
         
-        worksheet.column_dimensions[col_letter].width = max_width + 2
+        worksheet.column_dimensions[col_letter].width = max_width + 4
             

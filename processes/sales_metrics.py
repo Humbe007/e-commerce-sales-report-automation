@@ -1,7 +1,8 @@
 import pandas as pd
 def get_product_stats(df_grouped, df_products, product):
     
-    qty = df_grouped[product] if product in df_grouped else 0
+    qty_series = df_grouped.loc[df_grouped['product'] == product, 'quantity']  
+    qty = qty_series.iloc[0] if not qty_series.empty else 0
     
     cost_series = df_products.loc[df_products['product'] == product, 'cost']
     cost = cost_series.iloc[0] if not cost_series.empty else 0

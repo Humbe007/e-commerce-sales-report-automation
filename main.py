@@ -1,9 +1,12 @@
 import pandas as pd
+import openpyxl as op
 import os
+
 import processes.charger as ch
 import processes.cleaner as cl
 import processes.sales_metrics as sales
 import processes.export as ex
+import processes.formatter as fm
 
 #Part 1: Data Collection from Datasets 
 
@@ -51,21 +54,46 @@ print("The sales metrics have been calculated successfully.")
 
 #Part 6: Exporting to Excel:
 
-
 os.makedirs('output', exist_ok=True)
-with pd.ExcelWriter('output//sales_report.xlsx',engine='openpyxl') as writer:
-    df_sheet1.to_excel(writer, sheet_name='Resume', index=False)
-    df_top_products.to_excel(writer, sheet_name='Top products', index=False)
-    df_sheet3.to_excel(writer, sheet_name='Daily sales', index=False)
-    df_merged.to_excel(writer, sheet_name='Merged Data', index=False)
-    
-    for sheet_name in writer.sheets:
-        worksheet = writer.sheets[sheet_name]
-    
-        # Ajustar columnas
-        ex.adjust_column_dimensions(worksheet)
-    
-        # Freeze panes (congelar fila superior)
-        worksheet.freeze_panes = "A2"
+try:
+    with pd.ExcelWriter('output//sales_report.xlsx',engine='openpyxl') as writer:
+        df_sheet1.to_excel(writer, sheet_name='Resume', index=False)
+        df_top_products.to_excel(writer, sheet_name='Top products', index=False)
+        df_sheet3.to_excel(writer, sheet_name='Daily sales', index=False)
+        df_merged.to_excel(writer, sheet_name='Merged Data', index=False)
+        
+        for sheet_name in writer.sheets:
+            worksheet = writer.sheets[sheet_name]
+        
+            # Ajustar columnas
+            ex.adjust_column_dimensions(worksheet)
+        
+            # Freeze panes (congelar fila superior)
+            worksheet.freeze_panes = "A2"
+except PermissionError as e:
+    input(f"An error has been occurred: {e} \n  ---Please close or remove the file 'sales_report.xlsx' at the folder and try again---\nPress Enter to finish.")
 
-input("The sales report has been exported successfully. \nPress Enter to finish.")
+workbook = op.load_workbook('output//sales_report.xlsx')
+
+#Part 7: Formatting
+resume_sheet = workbook['Resume']
+fm.format_table(resume_sheet)
+
+top_products_sheet = workbook['Top products']
+fm.format_table(top_products_sheet)
+fm.apply_color_scale(worksheet=top_products_sheet, column_letter='C', green_min=100, yellow_min=90)
+col_letters = ("B", "D", "E", "F","G")
+for col in col_letters:
+    fm.apply_gradient_column(worksheet=top_products_sheet, column_letter=col, start_color='FFFF00', end_color='66FF33')
+
+daily_sales_sheet = workbook['Daily sales']
+fm.format_table(daily_sales_sheet)
+fm.apply_color_scale(worksheet=daily_sales_sheet, column_letter='C', green_min=4, yellow_min =False)
+
+merged_data_sheet = workbook['Merged Data']
+fm.format_table(merged_data_sheet)
+fm.apply_color_scale(worksheet=merged_data_sheet, column_letter='D', green_min=10, yellow_min=5)
+
+workbook.save('output//sales_report.xlsx')
+print("The sales report has been generated and formatted successfully.")
+input("Press Enter to finish.")
