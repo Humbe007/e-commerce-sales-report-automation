@@ -81,10 +81,7 @@ Anyone working with repetitive Excel reporting
 
 Here is a visualization of the final report:
 
-https://github.com/user-attachments/assets/a60f999e-811e-4947-a857-458e664a420a
 
-💡 Notes
+https://github.com/user-attachments/assets/9f37ca7d-3af9-43cd-810c-d88a54d566fc
 
-The latest version includes enhanced visual formatting to improve readability and usability.
-A new demo video showcasing these improvements will be added soon.
- 
+
